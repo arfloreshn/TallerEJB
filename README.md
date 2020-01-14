@@ -5,7 +5,7 @@
   Proposito: Capacitación
 
 <p>
-  <img src="https://github.com/arfloreshn/TallerEJB/tree/master/previenev7/foto4.jpg" width="100%" height="500" title="Polizas">
+  <img src="https://github.com/arfloreshn/TallerEJB/blob/master/previenev7/foto4.jpg" width="100%" height="500" title="Polizas">
 </p>
   
 # Requisitos:
@@ -22,15 +22,15 @@
 
 # ENTIDAD RELACION
 <p>
-  <img src="https://github.com/arfloreshn/TallerEJB/tree/master/previenev7/foto1.png" width="100%" height="500" title="Dabase de datos">
+  <img src="https://github.com/arfloreshn/TallerEJB/blob/master/previenev7/foto1.jpg" width="100%" height="500" title="Dabase de datos">
 </p>
 
 # MENU DE ACCESO
 <p>
-  <img src="https://github.com/arfloreshn/TallerEJB/tree/master/previenev7fondos/foto2.jpg" width="100%" height="500" title="Menu de acceso">
+  <img src="https://github.com/arfloreshn/TallerEJB/blob/master/previenev7/foto2.jpg" width="100%" height="500" title="Menu de acceso">
 </p>
 
 # ABM DE ASEGURADOS
 <p>
-  <img src="https://github.com/arfloreshn/TallerEJB/tree/master/previenev7fondos/foto3.jpg" width="100%" height="500" title="Abm de asegurados">
+  <img src="https://github.com/arfloreshn/TallerEJB/blob/master/previenev7/foto3.jpg" width="100%" height="500" title="Abm de asegurados">
 </p>
