@@ -1,0 +1,371 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <link href="../css/semantic/semantic.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../css/previene.css" rel="stylesheet" type="text/css"/>
+        <title>Mantenimiento de Asegurados</title>
+    </h:head>
+    <h:body>
+        <h:form id="main">
+            <p:growl id="mensaje" showDetail="true" sticky="true" />
+
+            <p:toolbar id="toolbar">
+                <h:outputLabel id="msg" value="#{aseguradosController.msg}"/>
+
+                <p:toolbarGroup align="right">
+                    <p:splitButton id="basic" value="Acción">
+
+                        <p:menuitem id="cmdaltas"
+                                    value="Altas"
+                                    action="#{aseguradosController.limpiarRegistro}"  
+                                    update="pnlaltas"
+                                    icon="fa fa-save"
+                                    process="@this"
+                                    oncomplete="PF('dlgalta').show()">
+                        </p:menuitem>
+                        <p:separator/>
+                        <p:menuitem value="Volver"  
+                                    outcome="/index.xhtml"
+                                    icon="fa fa-home" />
+                    </p:splitButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dataTable id="tbasegurados" 
+                         var="dat"
+                         rowStyleClass="ui inverted table"
+                         value="#{aseguradosController.lstAsegurados()}"
+                         selection="#{aseguradosController.seleccionaItem}"
+                         selectionMode="single"
+                         rowKey="#{dat.idAsegurado}">
+
+                <p:ajax event="rowSelect" 
+                        process="@this"
+                        listener="#{aseguradosController.onRowSelect}"  
+                        update=":main:pnlmodifica" />
+
+                <p:column headerText="Cod." style="width:8%">
+                    <h:outputText value="#{dat.idAsegurado}"> </h:outputText> 
+                </p:column>
+                <p:column headerText="Nombre del contrante" style="width:70%">
+                    <h:outputText value="#{dat.nombreCompleto}"> </h:outputText> 
+                </p:column>
+                <p:column headerText="Tipo asegurado" style="width:8%">
+                    <h:outputText value="#{dat.tipoAsegurado}"> </h:outputText> 
+                </p:column>
+                <p:column headerText="Tipo documento" style="width:8%">
+                    <h:outputText value="#{dat.tipoDocumento}"> </h:outputText> 
+                </p:column>
+
+            </p:dataTable>
+
+            <p:contextMenu for="tbasegurados">
+                <p:menuitem value="Modificar" 
+                            process="@this"
+                            update=":main:pnlmodifica"
+                            icon="pi pi-search" 
+                            oncomplete="PF('dlgmodifica').show()"/>
+
+                <p:menuitem  value="Borrar" 
+                             process="@this"
+                             action="#{aseguradosController.cmdeliminar}" 
+                             update=":main:tbasegurados, mensaje"
+                             icon="pi pi-times">
+                    <p:confirm header="Confirmar" 
+                               message="Esta seguro?" 
+                               icon="pi pi-exclamation-triangle" />
+                </p:menuitem>
+            </p:contextMenu>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" update=":main:growl" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+            </p:confirmDialog>   
+
+
+            <!--  
+            =========================================================================== 
+             DIALOGO DE ALTAS
+            =========================================================================== 
+            -->
+            <p:dialog  id="dlgalta"
+                       widgetVar="dlgalta" 
+                       modal="true"
+                       height="300"
+                       width="1100"
+                       header="Registro de nuevo contratantes"
+                       showEffect="fade" hideEffect="fade">
+
+                <p:outputPanel  id="pnlaltas">
+
+                    <!-- Iniciando el contenedor  de grupos-->
+                    <div class="ui-g ui-fluid">
+                        <!-- 1ra Columna de Grupo -->
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="ui-inputgroup">
+
+                                <h:panelGrid columns="1">
+
+
+                                    <p:outputLabel for="lblnrodocumento" value="Numero de documento:" />
+                                    <p:inputText id="lblnrodocumento" value="#{aseguradosController.var_asegurado.nroDocumento}">
+                                        <p:ajax update="@this,lblnrodocumento" event="change" process="@this" partialSubmit="true"/>
+                                    </p:inputText>
+
+                                    <p:outputLabel for="cbodocumento" value="Tipo documento:" />
+                                    <p:selectOneMenu id="cbodocumento" 
+                                                     value="#{aseguradosController.var_asegurado.tipoDocumento}" 
+                                                     style="width:300px">
+                                        <f:selectItem itemLabel="Seleccione un documento" itemValue="" />
+                                        <f:selectItem itemLabel="IDENTIDAD" itemValue='I'/>
+                                        <f:selectItem itemLabel="PASAPORTE" itemValue='P'/>
+                                        <f:selectItem itemLabel="RUC" itemValue='R'/>
+                                        <p:ajax  event="change"  process="@this,cbodocumento" update=":main:mensaje" partialSubmit="true"/>
+                                    </p:selectOneMenu>
+
+
+                                    <p:outputLabel for="lblnomaseg" value="Nombre del contrante:" />
+                                    <p:inputText id="lblnomaseg" value="#{aseguradosController.var_asegurado.nombreCompleto}">
+                                        <p:ajax update="@this,lblnomaseg" event="change" process="@this" partialSubmit="true"/>
+                                    </p:inputText>
+
+                                </h:panelGrid>
+
+                            </div>
+                        </div>
+                        <!-- fin de la 1ra Columna de Grupo -->
+
+                        <!-- 2da Columna de Grupo -->
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="ui-inputgroup">
+                                <h:panelGrid columns="1">
+                                    <p:outputLabel for="lblfecnac" value="Fecha de Nacimiento:" />
+                                    <p:datePicker id="lblfecnac"
+                                                  pattern="dd/MM/yyyy"
+                                                  value="#{aseguradosController.var_asegurado.fecNacimiento}">
+                                        <p:ajax update=":main:mensaje" event="change" process="@this" partialSubmit="true"/>
+                                    </p:datePicker>
+
+                                    <p:outputLabel for="lblfecalta" value="Fecha de alta:" />
+                                    <p:datePicker id="lblfecalta"
+                                                  pattern="dd/MM/yyyy"
+                                                  value="#{aseguradosController.var_asegurado.fecAlta}">
+                                        <p:ajax update=":main:mensaje" event="change" process="@this" partialSubmit="true"/>
+                                    </p:datePicker>
+
+                                    <p:outputLabel for="lblfecbaja" value="Fecha de baja:" />
+                                    <p:datePicker id="lblfecbaja" 
+                                                  pattern="dd/MM/yyyy"
+                                                  value="#{aseguradosController.var_asegurado.fecBaja}">
+                                        <p:ajax update=":main:mensaje" event="change" process="@this" partialSubmit="true"/>
+                                    </p:datePicker>
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                        <!-- fin de la 2da Columna de Grupo -->
+
+                        <!-- 3ra Columna de Grupo -->
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="ui-inputgroup">
+                                <h:panelGrid>
+                                    <p:outputLabel for="cboasegurado" value="Tipo asegurado:" />
+                                    <p:selectOneMenu id="cboasegurado" 
+                                                     value="#{aseguradosController.var_asegurado.tipoAsegurado}" 
+                                                     style="width:200px">
+                                        <f:selectItem itemLabel="Seleccione el tipo de asegurado" itemValue="" />
+                                        <f:selectItem itemLabel="JURIDICA" itemValue='J'/>
+                                        <f:selectItem itemLabel="NATURAL" itemValue='N'/>
+                                        <p:ajax  event="change"  process="@this,cboasegurado" update=":main:mensaje" partialSubmit="true"/>
+
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="cbosexo" value="Sexo:" />
+                                    <p:selectOneMenu id="cbosexo" 
+                                                     value="#{aseguradosController.var_asegurado.tipoSexo}" 
+                                                     style="width:200px">
+                                        <f:selectItem itemLabel="Seleccione en sexo" itemValue="" />
+                                        <f:selectItem itemLabel="Femenico" itemValue='F'/>
+                                        <f:selectItem itemLabel="Masculino" itemValue='M'/>
+                                        <p:ajax  event="change"  process="@this,cbosexo" update=":main:mensaje" partialSubmit="true"/>
+
+                                    </p:selectOneMenu>
+
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                        <!-- fin de la 3ra Columna de Grupo -->
+                    </div>
+
+                    <div>
+
+                        <!--process="@this" -->
+
+                        <!-- fin de contenedor de Grupo -->
+                        <p:commandButton id="btnuevoGuardar" 
+                                         value="Guardar"
+                                         process="@this"
+                                         update="tbasegurados, mensaje"
+                                         action="#{aseguradosController.cmdGuardar}"
+                                         oncomplete="PF('dlgalta').hide()" 
+                                         icon="fa fa-save" 
+                                         title="Guardar">
+                        </p:commandButton>
+
+
+                        <p:commandButton id="btnAltaCancelar" 
+                                         style="margin-left: 5px"
+                                         value="Cancelar"
+                                         oncomplete="PF('dlgalta').hide()" 
+                                         icon="fa fa-cancel" 
+                                         title="Cancelar">
+                        </p:commandButton>
+
+                    </div>
+                </p:outputPanel> 
+
+
+            </p:dialog>
+
+            <!--  
+            =========================================================================== 
+             DIALODOGO DE MODIFICACION
+            =========================================================================== 
+            -->
+            <p:dialog id="dlgmodifica" header="Modifica datos del asegurado" 
+                      widgetVar="dlgmodifica" modal="true" 
+                      height="300"
+                      width="1100"
+                      showEffect="fade" hideEffect="fade" resizable="false">
+
+                <p:outputPanel id="pnlmodifica">
+                    <!-- Iniciando el contenedor  de grupos-->
+                    <div class="ui-g ui-fluid">
+                        <!-- 1ra Columna de Grupo -->
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="ui-inputgroup">
+
+                                <h:panelGrid columns="1">
+
+
+                                    <p:outputLabel for="lblmodificanrodocumento" value="Numero de documento:" />
+                                    <p:inputText id="lblmodificanrodocumento" 
+                                                 value="#{aseguradosController.var_asegurado.nroDocumento}">
+                                        <p:ajax update=":main:mensaje" event="change" process="@this" partialSubmit="true"/>
+                                    </p:inputText>
+
+                                    <p:outputLabel for="cbomodificadocumento" value="Tipo documento:" />
+                                    <p:selectOneMenu id="cbomodificadocumento" 
+                                                     value="#{aseguradosController.var_asegurado.tipoDocumento}" 
+                                                     style="width:300px">
+                                        <f:selectItem itemLabel="Seleccione un documento" itemValue="" />
+                                        <f:selectItem itemLabel="IDENTIDAD" itemValue='I'/>
+                                        <f:selectItem itemLabel="PASAPORTE" itemValue='P'/>
+                                        <f:selectItem itemLabel="RUC" itemValue='R'/>
+                                        <p:ajax  event="change"  process="@this" update=":main:mensaje" partialSubmit="true"/>
+
+                                    </p:selectOneMenu>
+
+
+                                    <p:outputLabel for="lblmodificanomaseg" value="Nombre del contrante:" />
+                                    <p:inputText id="lblmodificanomaseg" 
+                                                 value="#{aseguradosController.var_asegurado.nombreCompleto}">
+                                        <p:ajax update=":main:mensaje" event="change" process="@this" partialSubmit="true"/>
+                                    </p:inputText>
+
+                                </h:panelGrid>
+
+                            </div>
+                        </div>
+                        <!-- fin de la 1ra Columna de Grupo -->
+
+                        <!-- 2da Columna de Grupo -->
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="ui-inputgroup">
+                                <h:panelGrid columns="1">
+                                    <p:outputLabel for="lblmodificafecnac" value="Fecha de Nacimiento:" />
+                                    <p:datePicker id="lblmodificafecnac" value="#{aseguradosController.var_asegurado.fecNacimiento}">
+                                        <p:ajax update=":main:mensaje" event="change" process="@this" partialSubmit="true"/>
+
+                                    </p:datePicker>
+
+                                    <p:outputLabel for="lblmodificafecalta" value="Fecha de alta:" />
+                                    <p:datePicker id="lblmodificafecalta" value="#{aseguradosController.var_asegurado.fecAlta}">
+                                        <p:ajax update=":main:mensaje" event="change" process="@this" partialSubmit="true"/>
+
+                                    </p:datePicker>
+
+                                    <p:outputLabel for="lblmodificafecbaja" value="Fecha de baja:" />
+                                    <p:datePicker id="lblmodificafecbaja" value="#{aseguradosController.var_asegurado.fecBaja}">
+                                        <p:ajax update=":main:mensaje" event="change" process="@this" partialSubmit="true"/>
+                                    </p:datePicker>
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                        <!-- fin de la 2da Columna de Grupo -->
+
+                        <!-- 3ra Columna de Grupo -->
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="ui-inputgroup">
+                                <h:panelGrid>
+                                    <p:outputLabel for="cbomodificaasegurado" value="Tipo asegurado:" />
+                                    <p:selectOneMenu id="cbomodificaasegurado" 
+                                                     value="#{aseguradosController.var_asegurado.tipoAsegurado}" 
+                                                     style="width:200px">
+                                        <f:selectItem itemLabel="Seleccione el tipo de asegurado" itemValue="" />
+                                        <f:selectItem itemLabel="JURIDICA" itemValue='J'/>
+                                        <f:selectItem itemLabel="NATURAL" itemValue='N'/>
+                                        <p:ajax  event="change"  process="@this,cbomodificaasegurado" update=":main:mensaje" partialSubmit="true"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="cbomodificasexo" value="Sexo:" />
+                                    <p:selectOneMenu id="cbomodificasexo" 
+                                                     value="#{aseguradosController.var_asegurado.tipoSexo}" 
+                                                     style="width:200px">
+                                        <f:selectItem itemLabel="Seleccione en sexo" itemValue="" />
+                                        <f:selectItem itemLabel="Femenico" itemValue='F'/>
+                                        <f:selectItem itemLabel="Masculino" itemValue='M'/>
+                                        <p:ajax  event="change"  process="@this" update=":main:mensaje" partialSubmit="true"/>
+                                    </p:selectOneMenu>
+
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                        <!-- fin de la 3ra Columna de Grupo -->
+                    </div>
+
+
+                </p:outputPanel>
+
+                <p:commandButton id="btnGuardaModificacion"
+                                 value="Guardar"
+                                 action="#{aseguradosController.cmdmodificar}"
+                                 process="@this"
+                                 update="tbasegurados, mensaje"
+                                 oncomplete="PF('dlgmodifica').hide()" 
+                                 icon="fa fa-save" 
+                                 title="Guardar">
+                </p:commandButton>
+
+                <p:commandButton id="btnCancelaModificacion"
+                                 style="margin-left: 5px"
+                                 value="Cancelar"
+                                 oncomplete="PF('dlgmodifica').hide()" 
+                                 title="Cancelar">
+                </p:commandButton>
+
+            </p:dialog>
+
+
+
+        </h:form>
+
+
+
+
+
+    </h:body>
+</html>

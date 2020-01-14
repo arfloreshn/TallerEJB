@@ -1,0 +1,431 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <link href="../css/primeflexbox.css" rel="stylesheet" type="text/css"/>
+        <link href="../css/semantic/semantic.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../css/previene.css" rel="stylesheet" type="text/css"/>
+        <title>Maestro de Polizas</title>
+    </h:head>
+    <h:body>
+        <h:form id="main">
+
+            <p:growl id="mensaje" showDetail="true" sticky="true" />
+            <p:outputPanel id="pnlmain">
+
+                <p:toolbar id="toolbar">
+                    <p:toolbarGroup align="right">
+                        <p:splitButton id="basic" value="Acción">
+
+                            <p:menuitem id="cmdnuevo"
+                                        value="Nuevo" 
+                                        icon="fa fa-plus-circle"
+                                        action="#{polizasController.cmdnuevo}"
+                                        process="@this"
+                                        update="pnlmain,main:mensaje"
+                                        >
+                            </p:menuitem>
+                            <!--
+                              NOTAR LA DIFERENCIA ENTRE EL BOTON NUEVO Y GUARDAR
+                              LA DIFERENCIA RADICA, QUE AL USAR LA PROPIEDAD PROCESS=@THIS
+                              SE HARA UNA ACCION SOLO PARA EL BOTON, EN CAMBIO CON BOTON GUARDAR
+                              VAMOS A VALIDAR TODO EL FORMULARIO HAREMOS UN SUBMIT COMPLETO
+                            -->
+                            <p:menuitem id="cmdguardar"
+                                        value="Guardar" 
+                                        icon="fa fa-save"
+                                        action="#{polizasController.cmdGuardar}"
+                                        process="@this"
+                                        update="pnlmain,main:polizas, main:mensaje">
+                            </p:menuitem>
+
+                            <p:separator/>
+                            <p:menuitem value="Volver" 
+                                        outcome="/index.xhtml"
+                                        icon="fa fa-home" />
+                        </p:splitButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+                <!-- Iniciando el contenedor  de grupos-->
+                <div class="ui-g ui-fluid">
+                    <!-- 1ra Columna de Grupo -->
+                    <div class="ui-g-12 ui-md-4">
+                        <div class="ui-inputgroup">
+                            <h:panelGrid columns="1">
+                                <p:outputLabel for="cboramo" value="Ramo de la Poliza"/>
+
+                                <p:selectOneMenu  id="cboramo" 
+                                                  required="true"
+                                                  immediate="true"
+                                                  filter="true"
+                                                  filterMatchMode="startsWith"
+                                                  value="#{polizasController.var_ramos.id}"
+                                                  valueChangeListener="#{polizasController.onChangeCboRamo}"
+                                                  requiredMessage="Escoja el ramo de la poliza">
+                                    <f:selectItem itemLabel="Seleccion un ramo" itemValue="#{polizasController.var_poliza.ramos.id}"  />
+                                    <f:selectItems value="#{polizasController.cboRamos}" 
+                                                   var="r" 
+                                                   itemLabel="#{r.NomRamo}" 
+                                                   itemValue="#{r}"/>
+                                    <p:ajax  event="change"  process="@this,cboramo" update=":main:mensaje" partialSubmit="true"/>
+                                </p:selectOneMenu>
+                                <p:message for="cboramo" />
+
+                                <p:outputLabel for="cboaseg" value="Asegurado"/>
+                                <p:selectOneMenu  id="cboaseg" 
+                                                  required="true"
+                                                  immediate="true"
+                                                  filter="true"
+                                                  filterMatchMode="startsWith"
+                                                  value="#{polizasController.var_asegurado.idAsegurado}"
+                                                  valueChangeListener="#{polizasController.onChangeCboAsegurado}"
+                                                  requiredMessage="Ingrese un asegurado para la poliza">
+                                    <f:selectItem itemLabel="Seleccion un asegurado" 
+                                                  itemValue="#{polizasController.var_poliza.asegurado.idAsegurado}"  />
+                                    <f:selectItems value="#{polizasController.cboAsegurados}" 
+                                                   var="c" 
+                                                   itemLabel="#{c.NombreCompleto}" 
+                                                   itemValue="#{c}"/>
+                                    <p:ajax  event="change"  process="@this,cboaseg" update=":main:mensaje" partialSubmit="true"/>
+
+                                </p:selectOneMenu>
+                                <p:message for="cboaseg" />
+
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                    <!-- Fin de la 1ra Columna de Grupo -->
+
+
+                    <!-- 2da Columna del Grupo -->
+
+                    <div class="ui-g-12 ui-md-4">
+                        <div class="ui-inputgroup">
+                            <h:panelGrid columns="1">
+                                <p:outputLabel for="fec_vig_desde" value="Inicio de la cobertura"/>
+                                <p:datePicker id="fec_vig_desde"
+                                              showIcon="true"
+                                              locale="es"
+                                              required="true"
+                                              pattern="dd/MM/yyyy"
+                                              requiredMessage="Ingrese la fecha de inicio de la vigencia"
+                                              value="#{polizasController.var_poliza.fecVigDesde}">
+                                    <p:ajax update="@this,fec_vig_desde" event="blur" process="@this" partialSubmit="true"/>
+                                </p:datePicker>
+                                <p:message for="fec_vig_desde" />
+
+                                <p:outputLabel for="fec_vig_hasta" value="Fin  de la cobertura"/>
+                                <p:datePicker id="fec_vig_hasta" 
+                                              showIcon="true"
+                                              locale="es"
+                                              required="true"
+                                              pattern="dd/MM/yyyy"
+                                              requiredMessage="Ingrese la fecha de finalización de la vigencia"
+                                              value="#{polizasController.var_poliza.fecVigHasta}">
+                                    <p:ajax update="@this,fec_vig_hasta" event="blur" process="@this" partialSubmit="true"/>
+                                </p:datePicker>
+                                <p:message for="fec_vig_hasta" />
+                            </h:panelGrid>
+                        </div>
+                    </div>
+
+                    <!-- Fin de la 2da Columna del Grupo -->
+
+                    <!-- 3ra Columna de grupo -->
+
+                    <div class="ui-g-12 ui-md-4">
+                        <div class="ui-inputgroup">
+                            <h:panelGrid columns="1">
+                                <p:outputLabel for="prima" value="Valor de la Prima"/>
+                                <p:inputNumber id="prima" 
+                                               required="true"
+                                               decimalPlaces="2"
+                                               decimalSeparator="." 
+                                               thousandSeparator=","
+                                               placeholder="0.00"
+                                               title="Ingrese el importe de la prima facturada"
+                                               value="#{polizasController.var_poliza.valorPrima}">
+                                    <p:ajax  event="blur"  process="@this,prima" update=":main:mensaje" partialSubmit="true"/>
+
+                                </p:inputNumber>
+
+                                <p:outputLabel for="couta" value="Nro Coutas"/>
+                                <p:spinner id="couta"
+                                           required="true"
+                                           value="#{polizasController.var_poliza.nroCoutas}"  
+                                           placeholder="Nro Coutas"
+                                           title="Ingrese el numero de coutas de pagos de la prima"
+                                           min="1" max="12">
+                                    <p:ajax  event="blur"  process="@this,couta" update=":main:mensaje" partialSubmit="true"/>
+                                </p:spinner>
+
+                            </h:panelGrid>
+                        </div>
+                    </div>
+
+                    <!-- Fin de la 3ra Columna de grupo -->
+
+                </div>
+                <!-- Fin del contenedor de maestro de columnas -->
+            </p:outputPanel>
+
+            <!--
+            ==========================================================================
+            LISTA GENERAL DE POLIZAS
+            ==========================================================================
+            -->
+            <p:dataTable id="polizas"  
+                         var="pol" 
+                         value="#{polizasController.listarPolizas}"
+                         selection="#{polizasController.seleccionaItem}"
+                         rowKey="#{pol.idPoliza}"
+                         selectionMode="single"
+                         paginator="true"
+                         rows = "5" 
+                         style="margin-top: 1px; width: 100%; font-size: 14px;"
+                         rowsPerPageTemplate="5,10,15,20,25,30,40,50"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                <f:facet name="header" class="ui inverted red table">
+                    LISTADO DE POLIZAS
+                </f:facet>
+
+                <p:ajax event="rowSelect" 
+                        listener="#{polizasController.onRowSelect}"  
+                        update=":main:mensaje, main:pnlmain, main:cboramo" />
+
+                <p:column headerText="Nro Poliza" 
+
+                          filterBy="#{pol.idPoliza}"
+                          sortBy="#{pol.idPoliza}" 
+                          filterMatchMode="contains"
+                          style="width:10%">
+                    <h:outputText value="#{pol.idPoliza}"> </h:outputText> 
+                </p:column>
+
+                <p:column headerText="Ramo" 
+                          filterBy="#{pol.ramos.nomRamo}"
+                          sortBy="#{pol.ramos.nomRamo}" 
+                          filterMatchMode="contains"
+                          style="width:25%">
+                    <h:outputText value="#{pol.ramos.nomRamo}"> </h:outputText> 
+                </p:column>
+
+                <p:column headerText="Asegurado" 
+                          filterBy="#{pol.asegurado.nombreCompleto}"
+                          sortBy="#{pol.asegurado.nombreCompleto}" 
+                          filterMatchMode="contains"
+                          style="width:45%">
+                    <h:outputText value="#{pol.asegurado.nombreCompleto}"> </h:outputText> 
+                </p:column>
+
+                <p:column headerText="Estado" 
+                          filterBy="#{pol.estadoPoliza.nomEstado}"
+                          sortBy="#{pol.estadoPoliza.nomEstado}" 
+                          filterMatchMode="contains"
+                          style="width:8%">
+                    <h:outputText value="#{pol.estadoPoliza.nomEstado}"> </h:outputText> 
+                </p:column>
+
+            </p:dataTable>
+
+            <p:contextMenu for="polizas">
+                <p:menuitem value="Info, Dialogo" update="@this,pnlinfo"  process="@this" partialSubmit="true" icon="pi pi-search" oncomplete="PF('dlginfo').show()"/>
+                <p:menuitem  id="mnucancelar" 
+                             value="Cancelación" 
+                             process="@this"
+                             action="#{polizasController.cmdborrar}" 
+                             update=":main:mensaje"
+                             icon="pi pi-times">
+                    <p:confirm header="Confirmar" 
+                               message="Esta seguro?" 
+                               icon="pi pi-exclamation-triangle" />
+
+                </p:menuitem>
+                <p:separator/>
+                <p:menuitem value="Coverturas"/>
+                <p:menuitem value="Beneficiarios"/>
+                <p:menuitem value="Reclamos"/>
+            </p:contextMenu>
+
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" update=":main:mensaje" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+            </p:confirmDialog>   
+
+            <!--  
+            =========================================================================== 
+             DIALOGO DE INFORMACION DETALLADA
+            =========================================================================== 
+            -->
+            <p:dialog id="dlginfo" 
+                      header="Información de la poliza" 
+                      widgetVar="dlginfo" 
+                      modal="true"
+                      height="400"
+                      width="900"
+                      showEffect="fade" 
+                      hideEffect="fade" 
+                      resizable="false">
+
+                <p:outputPanel id="pnlinfo">
+
+
+                    <div class="ui-g ui-fluid">
+                        <!-- 1ra Columna de Grupo -->
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="ui-inputgroup">
+                                <h:panelGrid columns="1">
+                                    <p:outputLabel for="cboinforamo" value="Ramo de la Poliza"/>
+
+                                    <p:selectOneMenu  id="cboinforamo" 
+                                                      required="true"
+                                                      immediate="true"
+                                                      filter="true"
+                                                      filterMatchMode="startsWith"
+                                                      value="#{polizasController.var_ramos.id}"
+                                                      valueChangeListener="#{polizasController.onChangeCboRamo}"
+                                                      requiredMessage="Escoja el ramo de la poliza">
+                                        <f:selectItems value="#{polizasController.cboRamos}" 
+                                                       var="r" 
+                                                       itemLabel="#{r.NomRamo}" 
+                                                       itemValue="#{r}"/>
+                                        <p:ajax  event="change"  process="@this,cboinforamo" update=":main:mensaje" partialSubmit="true"/>
+                                    </p:selectOneMenu>
+                                    <p:message for="cboinforamo" />
+
+                                    <p:outputLabel for="cboinfoaseg" value="Asegurado"/>
+                                    <p:selectOneMenu  id="cboinfoaseg" 
+                                                      required="true"
+                                                      immediate="true"
+                                                      filter="true"
+                                                      filterMatchMode="startsWith"
+                                                      value="#{polizasController.var_asegurado.idAsegurado}"
+                                                      valueChangeListener="#{polizasController.onChangeCboAsegurado}"
+                                                      requiredMessage="Ingrese un asegurado para la poliza">
+                                        <f:selectItems value="#{polizasController.cboAsegurados}" 
+                                                       var="c" 
+                                                       itemLabel="#{c.NombreCompleto}" 
+                                                       itemValue="#{c}"/>
+                                        <p:ajax  event="change"  process="@this,cboinfoaseg" update=":main:mensaje" partialSubmit="true"/>
+
+                                    </p:selectOneMenu>
+                                    <p:message for="cboinfoaseg" />
+
+                                </h:panelGrid>
+
+                            </div>
+                        </div>
+
+                        <!-- 2da Columna de Grupo -->
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="ui-inputgroup">
+                                <h:panelGrid columns="1">
+                                    <p:outputLabel for="info_fec_vig_desde" value="Inicio de la cobertura"/>
+                                    <p:datePicker id="info_fec_vig_desde"
+                                                  showIcon="true"
+                                                  locale="es"
+                                                  pattern="dd/MM/yyyy"
+                                                  value="#{polizasController.var_poliza.fecVigDesde}">
+                                        <p:ajax update="@this,info_fec_vig_desde" event="blur" process="@this" partialSubmit="true"/>
+                                    </p:datePicker>
+                                    <p:message for="info_fec_vig_desde" />
+
+                                    <p:outputLabel for="info_fec_vig_hasta" value="Fin  de la cobertura"/>
+                                    <p:datePicker id="info_fec_vig_hasta" 
+                                                  showIcon="true"
+                                                  locale="es"
+                                                  pattern="dd/MM/yyyy"
+                                                  value="#{polizasController.var_poliza.fecVigHasta}">
+                                        <p:ajax update="@this,info_fec_vig_hasta" event="blur" process="@this" partialSubmit="true"/>
+                                    </p:datePicker>
+                                    <p:message for="info_fec_vig_hasta" />
+                                </h:panelGrid>
+
+                            </div>
+                        </div>
+
+                        <!-- 3ra Columna de grupo -->
+
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="ui-inputgroup">
+                                <h:panelGrid columns="1">
+                                    <p:outputLabel for="info_prima" value="Valor de la Prima"/>
+                                    <p:inputNumber id="info_prima" 
+                                                   decimalPlaces="2"
+                                                   decimalSeparator="." 
+                                                   thousandSeparator=","
+                                                   placeholder="0.00"
+                                                   title="Ingrese el importe de la prima facturada"
+                                                   value="#{polizasController.var_poliza.valorPrima}">
+                                        <p:ajax  event="blur"  process="@this,info_prima" update=":main:mensaje" partialSubmit="true"/>
+
+                                    </p:inputNumber>
+
+                                    <p:outputLabel for="info_couta" value="Nro Coutas"/>
+                                    <p:spinner id="info_couta"  
+                                               value="#{polizasController.var_poliza.nroCoutas}"  
+                                               placeholder="Nro Coutas"
+                                               title="Ingrese el numero de coutas de pagos de la prima"
+                                               min="1" max="12">
+                                        <p:ajax  event="blur"  process="@this,info_couta" update=":main:mensaje" partialSubmit="true"/>
+                                    </p:spinner>
+
+                                </h:panelGrid>
+                            </div>
+                        </div>
+
+                        <!-- Fin de la 3ra Columna de grupo -->
+
+
+                    </div>
+
+                    <p:commandButton id="btnModificaCancelar" 
+                                     value="Cancelar"
+                                     oncomplete="PF('dlginfo').hide()" 
+                                     icon="icon-cancel" 
+                                     title="Cancelar">
+                    </p:commandButton>
+                </p:outputPanel>
+
+            </p:dialog>
+
+
+
+        </h:form>
+
+        <script type="text/javascript">
+            PrimeFaces.locales['es'] = {
+                closeText: 'Cerrar',
+                prevText: 'Anterior',
+                nextText: 'Siguiente',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+                weekHeader: 'Semana',
+                firstDayOfWeek: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: '',
+                timeOnlyTitle: 'Sólo hora',
+                timeText: 'Tiempo',
+                hourText: 'Hora',
+                minuteText: 'Minuto',
+                secondText: 'Segundo',
+                currentText: 'Fecha actual',
+                ampm: false,
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
+                allDayText: 'Todo el día'
+            };
+        </script>
+        <script src="../css/semantic/semantic.min.js" type="text/javascript"></script>
+    </h:body>
+</html>
+

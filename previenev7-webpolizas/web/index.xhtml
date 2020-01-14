@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <link href="css/semantic/semantic.min.css" rel="stylesheet" type="text/css"/>
+     <link href="css/previene.css" rel="stylesheet" type="text/css"/>
+        <title>Taller de EJB</title>
+    </h:head>
+    <h:body>
+        <h:form id="menu">
+            <p:panel header="Menu principal - Taller EJB" style="margin-top: 5%;margin-left: 25%; width: 40%">
+
+                <p:linkButton outcome="view/polizas.xhtml"  value="Polizas" icon="fa fa-database" styleClass="ui olive button" style="margin-left: 25%;margin-top: 1%; width: 50%"/>
+                <br/>
+                <p:linkButton outcome="view/asegurados" value="Asegurados" icon="fa fa-address-card" styleClass="ui olive button" style="margin-left: 25%; margin-top: 1%; width: 50%"/>
+                <br/>
+                <p:linkButton outcome="view/ramos" value="Ramos" icon="fa fa-registered" styleClass="ui olive button" style="margin-left: 25%;margin-top: 1%;width: 50%"/>
+                <br/>
+                <p:linkButton outcome="view/estados" value="Estados" icon="fa fa-toggle-on" styleClass="ui olive button" style="margin-left: 25%;margin-top: 1%; width: 50%"/>
+                <br/>
+
+            </p:panel>
+
+        </h:form>
+    </h:body>
+</html>
+

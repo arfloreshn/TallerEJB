@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <link href="../css/previene.css" rel="stylesheet" type="text/css"/>
+        <title>#{estadopolizaController.msg}</title>
+    </h:head>
+    <h:body>
+        <h:form id="main">
+            <p:toolbar id="toolbar">
+
+                <h:outputLabel id="msg" value="#{estadopolizaController.msg}"/>
+
+                <p:toolbarGroup align="right">
+                    <p:splitButton id="basic" value="Acción">
+
+                        <p:menuitem id="cmdaperturas"
+                                    value="Altas" 
+                                    icon="fa fa-save"
+                                    process="@this,cmdaperturas"
+                                    partialSubmit="true">
+                        </p:menuitem>
+                        <p:separator/>
+
+                        <p:menuitem id="cmdmodificar"
+                                    value="Modificacón" 
+                                    icon="fa fa-edit"
+                                    process="@this,cmdmodificar"
+                                    partialSubmit="true">
+                        </p:menuitem>
+                        <p:separator/>
+                        <p:menuitem id="cmdbaja" value="Bajas"
+                                    icon="fa fa-trash"
+                                    process="@this,cmdbaja"
+                                    partialSubmit="true" />
+                        <p:separator/>
+                        <p:menuitem value="Volver"  
+                                    outcome="/index.xhtml"
+                                    icon="fa fa-home" />
+                    </p:splitButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dataTable id="dt" var="dat" value="#{estadopolizaController.listaEstados()}">
+                <p:column headerText="Cod." style="width:2%">
+                    <h:outputText value="#{dat.idEstado}"> </h:outputText> 
+                </p:column>
+                <p:column headerText="Descripción" style="width:20%">
+                    <h:outputText value="#{dat.nomEstado}"> </h:outputText> 
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <!--  
+        =========================================================================== 
+         FORMULARIO DE ALTAS
+        =========================================================================== 
+        -->
+        <h:form id="frmaltas">
+
+        </h:form>
+
+
+        <!--  
+        =========================================================================== 
+         FORMULARIO DE MODIFICACION
+        =========================================================================== 
+        -->
+        <h:form id="frmmodificar">
+
+        </h:form>
+
+        <!--  
+        =========================================================================== 
+         FORMULARIO DE BORRADO
+        =========================================================================== 
+        -->
+        <h:form id="frmborrado">
+
+        </h:form>
+
+    </h:body>
+</html>
