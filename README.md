@@ -1,8 +1,8 @@
-# Modulo de Planilla
+# Taller EJB
 
     Creado por: Allan Ramiro Flores Murillo.
   Nacionalidad: Hondureña.
-  Proposito: Capacitación
+  Proposito: Enseñanza
 
 <p>
   <img src="https://github.com/arfloreshn/TallerEJB/blob/master/previenev7/foto4.jpg" width="100%" height="500" title="Polizas">
