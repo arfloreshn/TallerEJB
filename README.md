@@ -1,8 +1,9 @@
 # Taller EJB
 
-    Creado por: Allan Ramiro Flores Murillo.
-  Nacionalidad: Hondureña.
-  Proposito: Enseñanza
+ - Creado por: Allan Ramiro Flores Murillo.
+ - Nacionalidad: Hondureña.
+ - Proposito: Enseñanza
+ - Ubicacion de la guia: https://github.com/arfloreshn/TallerEJB/blob/master/Aplicaciones%20Empresariales%20Java.pdf 
 
 <p>
   <img src="https://github.com/arfloreshn/TallerEJB/blob/master/previenev7/foto4.jpg" width="100%" height="500" title="Polizas">
